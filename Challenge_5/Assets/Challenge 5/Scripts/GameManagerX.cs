@@ -21,17 +21,41 @@ public class GameManagerX : MonoBehaviour
     private float spaceBetweenSquares = 2.5f; 
     private float minValueX = -3.75f; //  x value of the center of the left-most square
     private float minValueY = -3.75f; //  y value of the center of the bottom-most square
-    
+
+    /*
+    public TextMeshProUGUI timeText;
+    public float playTime = 60f;
+    private float startTime;
+    */
+
     // Start the game, remove title screen, reset score, and adjust spawnRate based on difficulty button clicked
-    public void StartGame()
+    public void StartGame(int difficulty)
     {
-        spawnRate /= 5;
+        spawnRate /= difficulty;
         isGameActive = true;
         StartCoroutine(SpawnTarget());
         score = 0;
         UpdateScore(0);
         titleScreen.SetActive(false);
+
+        //startTime = Time.time;
     }
+
+    /*
+    void UpdateTimer()
+    {
+        if (!isGameActive) return;
+        float elapsedTime = Time.time - startTime;
+        int remainingSeconds = (int)Mathf.Ceil(playTime - elapsedTime);
+        timeText.text = $"Time: {remainingSeconds}";
+        if (remainingSeconds == 0) GameOver();
+    }
+
+    void Update()
+    {
+        UpdateTimer()
+    }
+    */
 
     // While game is active spawn a random target
     IEnumerator SpawnTarget()
@@ -70,14 +94,14 @@ public class GameManagerX : MonoBehaviour
     public void UpdateScore(int scoreToAdd)
     {
         score += scoreToAdd;
-        scoreText.text = "score";
+        scoreText.text = "Score: " + score;
     }
 
     // Stop game, bring up game over text and restart button
     public void GameOver()
     {
         gameOverText.gameObject.SetActive(true);
-        restartButton.gameObject.SetActive(false);
+        restartButton.gameObject.SetActive(true);
         isGameActive = false;
     }
 
@@ -86,5 +110,4 @@ public class GameManagerX : MonoBehaviour
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
-
 }
